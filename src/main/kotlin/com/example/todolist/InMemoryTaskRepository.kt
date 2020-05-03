@@ -1,7 +1,10 @@
 package com.example.todolist
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
 
+@Repository
 class InMemoryTaskRepository : TaskRepository {
     private val tasks: MutableList<Task> = mutableListOf()
 
