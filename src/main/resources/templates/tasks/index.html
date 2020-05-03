@@ -6,6 +6,7 @@
 </head>
 <body>
 <!-- th -> thymeleaf -->
+<p th:if="${tasks.isEmpty()}">タスクがありません。</p>
 <ul th:unless="${tasks.isEmpty()}">
     <li th:each="task: ${tasks}">
         <span th:unless="${task.done}" th:text="${task.content}"></span>
