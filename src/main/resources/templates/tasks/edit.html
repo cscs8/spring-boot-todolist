@@ -13,7 +13,8 @@
         <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
             エラーメッセージ
         </p>
-
+    </div>
+    <div>
         <label>
             完了: <input type="checkbox" th:field="*{done}"/>
         </label>
