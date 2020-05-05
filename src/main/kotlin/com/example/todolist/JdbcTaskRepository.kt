@@ -4,7 +4,6 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert
 import org.springframework.stereotype.Repository
-import javax.sql.DataSource
 
 
 @Repository
@@ -16,7 +15,6 @@ class JdbcTaskRepository(private val jdbcTemplate: JdbcTemplate) : TaskRepositor
     }
 
     override fun create(content: String): Task {
-        val dataSource: DataSource
         val simpleJdbcInsert = jdbcTemplate.dataSource?.let(::SimpleJdbcInsert)
         simpleJdbcInsert?.withTableName("task")
                 ?.usingGeneratedKeyColumns("id")
@@ -34,7 +32,6 @@ class JdbcTaskRepository(private val jdbcTemplate: JdbcTemplate) : TaskRepositor
 //        }, keyHolder)
 //        jdbcTemplate.update("INSERT INTO task(content) VALUES(?)", content)
 //        val id: Long? = jdbcTemplate.queryForObject("SELECT last_insert_id()")
-        val tasks = findAll()
 //        val id: Long? = keyHolder.key?.toLong()
         return Task(id!!, content, false)
     }
