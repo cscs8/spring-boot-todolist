@@ -1,5 +1,6 @@
 package com.example.todolist
 
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -54,5 +55,9 @@ class TaskController(private val taskRepository: TaskRepository) {
         return "redirect:/tasks"
 
     }
+
+    @ExceptionHandler(NotFoundException::class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    fun handleException(): String = "tasks/not_found"
 
 }
