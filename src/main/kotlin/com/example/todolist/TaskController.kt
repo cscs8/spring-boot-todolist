@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.*
 @Controller
 @RequestMapping("tasks")
 class TaskController(private val taskRepository: TaskRepository) {
+
+    @ExceptionHandler(NotFoundException::class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    fun handleException(): String = "tasks/not_found"
+
     @GetMapping("")
     fun index(model: Model): String {
         val tasks = taskRepository.findAll()
@@ -55,9 +60,5 @@ class TaskController(private val taskRepository: TaskRepository) {
         return "redirect:/tasks"
 
     }
-
-    @ExceptionHandler(NotFoundException::class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    fun handleException(): String = "tasks/not_found"
 
 }
