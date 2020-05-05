@@ -2,6 +2,7 @@ package com.example.todolist
 
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
+import org.springframework.jdbc.core.queryForObject
 import org.springframework.stereotype.Repository
 
 
@@ -15,7 +16,7 @@ class JdbcTaskRepository(private val jdbcTemplate: JdbcTemplate) : TaskRepositor
 
     override fun create(content: String): Task {
         jdbcTemplate.update("INSERT INTO task(content) VALUES(?)", content)
-        val id = jdbcTemplate.queryForObject("SELECT last_insert_id()", Long::class.java)
+        val id: Long? = jdbcTemplate.queryForObject("SELECT last_insert_id()")
         return Task(id!!, content, false)
     }
 
