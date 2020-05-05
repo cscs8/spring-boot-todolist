@@ -2,8 +2,9 @@ package com.example.todolist
 
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
-import org.springframework.jdbc.core.queryForObject
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert
 import org.springframework.stereotype.Repository
+import javax.sql.DataSource
 
 
 @Repository
@@ -15,8 +16,26 @@ class JdbcTaskRepository(private val jdbcTemplate: JdbcTemplate) : TaskRepositor
     }
 
     override fun create(content: String): Task {
-        jdbcTemplate.update("INSERT INTO task(content) VALUES(?)", content)
-        val id: Long? = jdbcTemplate.queryForObject("SELECT last_insert_id()")
+        val dataSource: DataSource
+        val simpleJdbcInsert = jdbcTemplate.dataSource?.let(::SimpleJdbcInsert)
+        simpleJdbcInsert?.withTableName("task")
+                ?.usingGeneratedKeyColumns("id")
+
+        val parameters = mapOf<String, Any>("content" to content, "done" to false)
+        val id: Long? = simpleJdbcInsert?.executeAndReturnKey(parameters)?.toLong()
+
+//        PreparedStatementCreatorFactory("INSERT INTO task(content) VALUES(?)", listOf(content))
+//        val preparedStatementCreator = SimplePreparedStatementCreator()
+//        val keyHolder = GeneratedKeyHolder()
+//        jdbcTemplate.update({
+//            val ps = it.prepareStatement("INSERT INTO task(content) VALUES(?)")
+//            ps.setString(1, content)
+//            ps
+//        }, keyHolder)
+//        jdbcTemplate.update("INSERT INTO task(content) VALUES(?)", content)
+//        val id: Long? = jdbcTemplate.queryForObject("SELECT last_insert_id()")
+        val tasks = findAll()
+//        val id: Long? = keyHolder.key?.toLong()
         return Task(id!!, content, false)
     }
 
